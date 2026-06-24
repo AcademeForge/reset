@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+!function(){
+  document.documentElement.setAttribute('data-theme',
+    localStorage.getItem('af_dark_mode')==='1'?'dark':'light');
+}();
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#4f46e5"/>
+<title>Reset Password · AcademeForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Sora:wght@700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --p:#4f46e5;--p2:#3730a3;--pl:#818cf8;
+  --acc:#06b6d4;--ok:#22c55e;--err:#ef4444;--warn:#f59e0b;
+  --bg:#f0f2ff;--surface:#fff;--card:rgba(255,255,255,.98);
+  --nav:rgba(255,255,255,.95);--inp:#f4f5fb;
+  --grp:rgba(79,70,229,.06);--grph:rgba(79,70,229,.10);
+  --t1:#0f0e2a;--t2:#4b5563;--tm:#9ca3af;
+  --b1:rgba(79,70,229,.15);--bc:rgba(79,70,229,.20);--bi:#d1d5db;
+  --sh:0 4px 24px rgba(79,70,229,.12),0 1px 3px rgba(0,0,0,.05);
+  --she:0 12px 40px rgba(79,70,229,.15);
+  --shb:0 4px 16px rgba(79,70,229,.28);
+  --r1:8px;--r2:12px;--r3:16px;--r4:24px;--rf:9999px;
+  --fd:'Sora',sans-serif;--fb:'Nunito',sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0c0b1d;--surface:#120f2a;--card:rgba(30,27,60,.98);
+  --nav:rgba(18,15,42,.98);--inp:#1e1b3c;
+  --grp:rgba(129,140,248,.08);--grph:rgba(129,140,248,.14);
+  --t1:#f0eeff;--t2:#a5a3c2;--tm:#6b6a8a;
+  --b1:rgba(129,140,248,.18);--bc:rgba(129,140,248,.25);--bi:rgba(129,140,248,.20);
+  --sh:0 8px 32px rgba(0,0,0,.45);--she:0 12px 40px rgba(0,0,0,.55);
+  --shb:0 4px 16px rgba(79,70,229,.40);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{font-size:15px;-webkit-text-size-adjust:100%;height:100%;height:100dvh;}
+body{
+  font-family:var(--fb);background:var(--bg);color:var(--t1);
+  min-height:100dvh;margin:0;
+}
+button{font-family:var(--fb);cursor:pointer;border:none;background:none;color:inherit;}
+a{text-decoration:none;color:var(--p);font-weight:800;}
+input{font-family:var(--fb);-webkit-user-select:text;-moz-user-select:text;user-select:text;}
+.hidden{display:none!important;}
+
+/* SPLIT LAYOUT (DESKTOP VS MOBILE) */
+.page-wrapper {
+  display: flex; 
+  width: 100%; 
+  min-height: 100dvh;
+}
+.brand-panel { 
+  display: none; 
+}
+.form-panel {
+  flex: 1; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 20px;
+}
+
+/* Desktop & Laptop layout */
+@media (min-width: 900px) {
+  .brand-panel {
+    display: flex; 
+    flex: 1; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    background: linear-gradient(135deg, var(--p) 0%, var(--acc) 100%);
+    color: #fff; 
+    padding: 40px; 
+    position: relative; 
+    overflow: hidden;
+  }
+  .brand-panel::before {
+    content: ''; position: absolute; top: -10%; left: -10%;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); filter: blur(40px);
+  }
+  .brand-panel::after {
+    content: ''; position: absolute; bottom: -10%; right: -10%;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: rgba(6,182,212,0.2); filter: blur(40px);
+  }
+  .bp-content { position: relative; z-index: 1; text-align: center; max-width: 460px; }
+  .bp-logo { 
+    width: 80px; height: 80px; border-radius: 20px; 
+    box-shadow: 0 12px 32px rgba(0,0,0,0.2); margin-bottom: 24px; 
+    object-fit: cover;
+  }
+  .bp-title { 
+    font-family: var(--fd); font-size: 38px; font-weight: 900; 
+    line-height: 1.15; margin-bottom: 16px; letter-spacing: -0.03em; 
+  }
+  .bp-desc { font-size: 16px; font-weight: 600; opacity: 0.9; line-height: 1.6; }
+  .bp-chips { 
+    display: flex; flex-wrap: wrap; justify-content: center; 
+    gap: 10px; margin-top: 32px; 
+  }
+  .bp-chip { 
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); 
+    padding: 8px 16px; border-radius: 99px; font-size: 13.5px; 
+    font-weight: 800; backdrop-filter: blur(8px); 
+  }
+  
+  .form-panel { 
+    flex: none; 
+    width: 500px; 
+    background: var(--surface); 
+    border-left: 1px solid var(--bc);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+  }
+}
+
+/* CONTAINER & CARD */
+.auth-container { width:100%; max-width: 440px; margin: 0 auto; }
+.auth-card{
+  border-radius:var(--r4);background:var(--card);border:1px solid var(--bc);
+  box-shadow:var(--sh);padding:32px 24px;position:relative;overflow:hidden;
+}
+.auth-card::before{content:'';position:absolute;inset:-80px -90px auto auto;width:190px;height:190px;border-radius:50%;background:rgba(79,70,229,.08);pointer-events:none;}
+.auth-card::after{content:'';position:absolute;inset:auto auto -95px -90px;width:210px;height:210px;border-radius:50%;background:rgba(6,182,212,.07);pointer-events:none;}
+
+.auth-icon{
+  position:relative;z-index:1;width:64px;height:64px;border-radius:20px;
+  margin:0 auto 16px;display:grid;place-items:center;font-size:30px;
+  background:linear-gradient(135deg,rgba(79,70,229,.12),rgba(6,182,212,.10));border:1px solid var(--b1);
+}
+.auth-title{
+  position:relative;z-index:1;font-family:var(--fd);font-size:24px;font-weight:900;
+  text-align:center;color:var(--t1);letter-spacing:-.03em;margin-bottom:6px;
+}
+.auth-sub{
+  position:relative;z-index:1;font-size:13.5px;color:var(--t2);text-align:center;
+  line-height:1.6;margin-bottom:24px;font-weight:600;
+}
+
+/* FORM ELEMENTS */
+.form-box{position:relative;z-index:1;}
+.form-label{display:block;font-size:12.5px;font-weight:800;color:var(--t1);margin:12px 0 6px;}
+.form-input{
+  width:100%;min-height:48px;padding:12px 14px;border-radius:var(--r2);
+  border:1px solid var(--bc);background:var(--inp);color:var(--t1);
+  font-size:14px;font-weight:700;outline:none;transition:all 0.2s;
+}
+.form-input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(79,70,229,.12);background:var(--surface);}
+.form-input::placeholder{color:var(--tm);font-weight:600;}
+
+/* BUTTONS */
+.main-btn{
+  width:100%;min-height:50px;padding:13px;border-radius:var(--r2);
+  margin-top:20px;font-size:14.5px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--p),var(--p2));box-shadow:var(--shb);
+  transition: transform 0.2s, opacity 0.2s;
+}
+.main-btn:active{transform:scale(.985);}
+.main-btn:disabled{opacity:0.7;pointer-events:none;}
+
+.danger-btn{
+  width:100%;min-height:50px;padding:13px;border-radius:var(--r2);
+  margin-top:12px;font-size:14.5px;font-weight:900;color:var(--t2);
+  background:var(--grp);border:1px solid var(--bc);
+  transition: transform 0.2s, background 0.2s;
+}
+.danger-btn:active{transform:scale(.985);background:var(--grph);}
+
+.otp-area{margin-top:16px; padding-top:16px; border-top:1px dashed var(--b1);}
+
+/* MESSAGES */
+.msg-box{
+  display:none;margin-top:16px;padding:12px 14px;border-radius:var(--r2);
+  font-size:13.5px;font-weight:800;line-height:1.45;
+}
+.msg-box.ok{display:block;background:rgba(34,197,94,.10);color:#166534;border:1px solid rgba(34,197,94,.18);}
+.msg-box.err{display:block;background:rgba(239,68,68,.10);color:#991b1b;border:1px solid rgba(239,68,68,.18);}
+.msg-box.info{display:block;background:rgba(79,70,229,.08);color:var(--p);border:1px solid var(--b1);}
+[data-theme="dark"] .msg-box.ok{color:#4ade80;}
+[data-theme="dark"] .msg-box.err{color:#f87171;}
+
+/* SUCCESS VIEW */
+#boxSuccess { text-align: center; padding: 24px 0; animation: fadeIn 0.4s ease forwards; }
+#boxSuccess .success-icon { font-size: 64px; margin-bottom: 20px; }
+#boxSuccess .auth-sub { font-size: 15px; margin-bottom: 0; color: var(--t1); }
+#boxSuccess b { color: var(--p); font-weight: 900; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  
+  <!-- LEFT BRANDING PANEL (DESKTOP/LAPTOP ONLY) -->
+  <div class="brand-panel">
+    <div class="bp-content">
+      <img src="/IMG/AF LOGO 1.jpeg" alt="AcademeForge Logo" class="bp-logo" onerror="this.style.display='none'"/>
+      <h1 class="bp-title">Secure Your<br>Learning Space</h1>
+      <p class="bp-desc">Regain access to your structured courses, AI-powered tools, live tests, and student community.</p>
+      <div class="bp-chips">
+        <span class="bp-chip">✦ AI Tutor</span>
+        <span class="bp-chip">🧪 Quizzes</span>
+        <span class="bp-chip">📚 Batches</span>
+        <span class="bp-chip">🏆 Rankings</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM PANEL (FULL WIDTH ON MOBILE) -->
+  <div class="form-panel">
+    <div class="auth-container">
+      <div class="auth-card">
+        
+        <!-- RESET PASSWORD FORM -->
+        <div id="boxForgot" class="form-box">
+          <div class="auth-icon">🔐</div>
+          <h2 class="auth-title">Reset Password</h2>
+          <p class="auth-sub">Enter your details to receive an OTP and reset your password.</p>
+    
+          <label class="form-label">Student ID / Phone / Email</label>
+          <input id="forgotLogin" class="form-input" type="text" placeholder="Enter your registered detail"/>
+          
+          <button class="main-btn" id="btnFindAccount" onclick="findStudentForReset()">Send Email OTP</button>
+    
+          <!-- OTP VERIFICATION AREA -->
+          <div id="forgotOtpArea" class="otp-area hidden">
+            <label class="form-label">Email OTP</label>
+            <input id="forgotOtp" class="form-input" type="text" maxlength="6" placeholder="Enter OTP sent to your email"/>
+            <button class="main-btn" id="btnVerifyOtp" onclick="verifyForgotOtp()">Verify OTP</button>
+          </div>
+
+          <!-- NEW PASSWORD AREA -->
+          <div id="resetPasswordArea" class="otp-area hidden" style="border-top: none; padding-top: 0; margin-top: 16px;">
+            <label class="form-label">New Password</label>
+            <input id="newPassword" class="form-input" type="password" placeholder="Create a strong new password"/>
+            <button class="main-btn" id="btnResetPassword" onclick="resetPassword()">Update Password</button>
+          </div>
+
+          <div id="authMsg" class="msg-box"></div>
+          
+          <!-- This will redirect user to the app's login scheme, or a fallback page if needed -->
+          <button class="danger-btn" onclick="window.location.href='https://app.academeforge.in'">Back to Login</button>
+
+          <p style="margin-top:16px;font-size:12px;color:var(--tm);font-weight:600;text-align:center;">We'll verify your registered email before allowing a password reset.</p>
+        </div>
+    
+        <!-- SUCCESS VIEW -->
+        <div id="boxSuccess" class="form-box hidden">
+          <div class="success-icon">✅</div>
+          <h2 class="auth-title">Password Reset!</h2>
+          <p class="auth-sub">Your password has been successfully updated.<br><br>Please open the <b>AF Nexus app</b> to login with your new password.</p>
+          <button class="danger-btn" onclick="window.location.href='https://app.academeforge.in'">Back to Login</button>
+        </div>
+    
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+
+const STUDENT_URL = "https://afooyyydhlwngzssgqih.supabase.co";
+const STUDENT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb295eXlkaGx3bmd6c3NncWloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NDQxMjgsImV4cCI6MjA5NDIyMDEyOH0.KG0XO0oP_2MpewHoIwTtbrKg5FkyOYRUtVzLH1MSJiE";
+
+const $ = id => document.getElementById(id);
+const cleanPhone = v => String(v||'').trim().replace(/\D/g,'');
+
+function showMsg(type, text) { const b=$('authMsg'); b.className='msg-box '+type; b.textContent=text||''; }
+function clearMsg() { const b=$('authMsg'); b.className='msg-box'; b.textContent=''; }
+
+let _sb = null;
+function getSb() {
+  if (_sb) return _sb;
+  _sb = supabase.createClient(STUDENT_URL, STUDENT_KEY);
+  return _sb;
+}
+
+async function edgeCall(fn, payload) {
+  try {
+    if (!navigator.onLine) return { ok:false, message:'No internet connection.' };
+    const sb = getSb();
+    const { data, error } = await sb.functions.invoke(fn, { body: payload||{} });
+    if (error) return { ok:false, message: error.message||'Request failed.' };
+    return data || { ok:false, message:'Empty response.' };
+  } catch(e) { return { ok:false, message: e.message||'Request failed.' }; }
+}
+
+let _resetStudent = null;
+let _forgotOtpVerified = false;
+
+async function findStudentForReset() {
+  clearMsg();
+  const value = ($('forgotLogin').value||'').trim();
+  const clean = cleanPhone(value);
+  
+  if (!value) { showMsg('err','Enter your Student ID, phone, or email.'); return; }
+  
+  const btn = $('btnFindAccount');
+  btn.disabled = true;
+  btn.textContent = 'Finding...';
+
+  showMsg('info','Finding your account…');
+  
+  const res = await edgeCall('student-find-reset-af', { value, clean_value:clean, email_value:value.toLowerCase() });
+  
+  if (!res||!res.ok) { 
+    showMsg('err', res?.message||'No account found matching those details.'); 
+    btn.disabled = false; btn.textContent = 'Send Email OTP'; return; 
+  }
+  if (!res.student?.email) { 
+    showMsg('err','Account found but email is missing. Contact support.'); 
+    btn.disabled = false; btn.textContent = 'Send Email OTP'; return; 
+  }
+  
+  _resetStudent = res.student; 
+  _forgotOtpVerified = false;
+  
+  showMsg('info','Sending OTP to your registered email…');
+  
+  const otpRes = await edgeCall('student-send-otp-af', { email:_resetStudent.email, mobile:_resetStudent.mobile||'', purpose:'reset' });
+  
+  if (!otpRes||!otpRes.ok) { 
+    showMsg('err','OTP send failed: '+(otpRes?.message||'Server error.')); 
+    btn.disabled = false; btn.textContent = 'Send Email OTP'; return; 
+  }
+  
+  $('forgotOtpArea').classList.remove('hidden'); 
+  $('resetPasswordArea').classList.add('hidden');
+  btn.classList.add('hidden'); // Hide the find button
+  $('forgotLogin').disabled = true; // Lock the input
+  
+  showMsg('ok','OTP sent to your registered email. Please verify.');
+}
+
+async function verifyForgotOtp() {
+  clearMsg();
+  const otp = ($('forgotOtp').value||'').trim();
+  
+  if (!_resetStudent) { showMsg('err','Please find your account first.'); return; }
+  if (!otp||otp.length<4) { showMsg('err','Enter a valid OTP.'); return; }
+  
+  const btn = $('btnVerifyOtp');
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+
+  showMsg('info','Verifying OTP…');
+  
+  const res = await edgeCall('student-verify-otp-af', { email:_resetStudent.email, otp, purpose:'reset' });
+  
+  if (!res||!res.ok) { 
+    showMsg('err','Invalid OTP: '+(res?.message||'Verification failed.')); 
+    btn.disabled = false; btn.textContent = 'Verify OTP'; return; 
+  }
+  
+  _forgotOtpVerified = true; 
+  $('forgotOtpArea').classList.add('hidden');
+  $('resetPasswordArea').classList.remove('hidden');
+  
+  showMsg('ok','Email verified successfully. Create your new password.');
+}
+
+async function resetPassword() {
+  clearMsg();
+  const newPwd = ($('newPassword').value||'').trim();
+  
+  if (!_resetStudent) { showMsg('err','Please find your account first.'); return; }
+  if (!_forgotOtpVerified) { showMsg('err','Please verify email OTP first.'); return; }
+  if (!newPwd||newPwd.length<6) { showMsg('err','New password must be at least 6 characters.'); return; }
+  
+  const btn = $('btnResetPassword');
+  btn.disabled = true;
+  btn.textContent = 'Updating...';
+
+  showMsg('info','Updating your password…');
+  
+  const res = await edgeCall('student-reset-password-af', { id:_resetStudent.id, email:_resetStudent.email, new_password:newPwd });
+  
+  if (!res||!res.ok) { 
+    showMsg('err', res?.message||'Password reset failed. Try again.'); 
+    btn.disabled = false; btn.textContent = 'Update Password'; return; 
+  }
+  
+  _resetStudent=null; 
+  _forgotOtpVerified=false;
+  
+  // On Success - Switch Views
+  $('boxForgot').classList.add('hidden');
+  $('boxSuccess').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
