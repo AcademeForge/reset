@@ -115,8 +115,9 @@ input{font-family:var(--fb);}
   background:linear-gradient(135deg,var(--p),var(--acc));
   display:grid;place-items:center;font-size:24px;
   box-shadow:0 8px 24px rgba(91,91,214,0.45);
-  flex-shrink:0;
+  flex-shrink:0;overflow:hidden;padding:0;
 }
+.hero-logo-mark img{width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;}
 .hero-brand-name{font-family:var(--fd);font-size:17px;font-weight:800;color:#fff;letter-spacing:-0.01em;}
 .hero-brand-sub{font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
 
@@ -216,8 +217,9 @@ input{font-family:var(--fb);}
   width:44px;height:44px;border-radius:12px;
   background:linear-gradient(135deg,var(--p),var(--acc));
   display:grid;place-items:center;font-size:20px;
-  box-shadow:var(--shb);
+  box-shadow:var(--shb);overflow:hidden;padding:0;
 }
+.mobile-logo-mark img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;}
 .mobile-brand{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--t1);}
 .mobile-brand-sub{font-size:10px;color:var(--t3);letter-spacing:0.06em;text-transform:uppercase;margin-top:1px;}
 .mobile-h1{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--t1);letter-spacing:-0.03em;margin-bottom:8px;}
@@ -382,7 +384,9 @@ input{font-family:var(--fb);}
 }
 .mobile-marquee:hover .mobile-belt{animation-play-state:paused;}
 .mobile-marquee-track{display:flex;overflow:hidden;}
-.m2-app{
+.m-app-icon img,.m2-icon img,.eco-app-icon img,.suc-icon img{
+  width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;
+}
   display:flex;align-items:center;gap:8px;
   background:var(--card);border:1px solid var(--bc);
   border-radius:var(--rf);padding:8px 14px 8px 8px;
@@ -491,7 +495,7 @@ input{font-family:var(--fb);}
 
       <!-- Brand -->
       <div class="hero-logo-row">
-        <div class="hero-logo-mark">⬡</div>
+        <div class="hero-logo-mark"><img src="/IMG/logo.png" alt="AcademeForge" onerror="this.style.display='none';this.parentElement.textContent='⬡';"/></div>
         <div>
           <div class="hero-brand-name">AcademeForge</div>
           <div class="hero-brand-sub">Account Services</div>
@@ -537,7 +541,7 @@ input{font-family:var(--fb);}
       <!-- Mobile Header -->
       <div class="mobile-hero">
         <div class="mobile-logo-row">
-          <div class="mobile-logo-mark">⬡</div>
+          <div class="mobile-logo-mark"><img src="/IMG/logo.png" alt="AcademeForge" onerror="this.style.display='none';this.parentElement.textContent='⬡';"/></div>
           <div>
             <div class="mobile-brand">AcademeForge</div>
             <div class="mobile-brand-sub">Account Services</div>
@@ -677,17 +681,21 @@ input{font-family:var(--fb);}
 
 /* ── APP DATA ──────────────────────────────────────── */
 const APPS = [
-  { name:'AF Nexus',        icon:'🌐', color:'#5B5BD6', bg:'rgba(91,91,214,0.12)' },
-  { name:'Sudoku Master',   icon:'🧩', color:'#7C3AED', bg:'rgba(124,58,237,0.12)' },
-  { name:'AF Test Arena',   icon:'⚡', color:'#F59E0B', bg:'rgba(245,158,11,0.12)' },
-  { name:'AF Programs',     icon:'📋', color:'#10B981', bg:'rgba(16,185,129,0.12)' },
-  { name:'AF Courses',      icon:'📚', color:'#3B82F6', bg:'rgba(59,130,246,0.12)' },
-  { name:'ZenoPulsky',      icon:'🎯', color:'#EF4444', bg:'rgba(239,68,68,0.12)' },
-  { name:'AcademeForge AI', icon:'🤖', color:'#06B6D4', bg:'rgba(6,182,212,0.12)' },
-  { name:'AF Labs',         icon:'🔬', color:'#8B5CF6', bg:'rgba(139,92,246,0.12)' },
-  { name:'AF Community',    icon:'👥', color:'#EC4899', bg:'rgba(236,72,153,0.12)' },
-  { name:'AF Cloud',        icon:'☁️', color:'#64748B', bg:'rgba(100,116,139,0.12)' },
+  { name:'AF Nexus',        icon:'🌐', img:'/IMG/1.png',  color:'#5B5BD6', bg:'rgba(91,91,214,0.12)' },
+  { name:'Sudoku Master',   icon:'🧩', img:'/IMG/2.png',  color:'#7C3AED', bg:'rgba(124,58,237,0.12)' },
+  { name:'AF Test Arena',   icon:'⚡', img:'/IMG/3.png',  color:'#F59E0B', bg:'rgba(245,158,11,0.12)' },
+  { name:'AF Programs',     icon:'📋', img:'/IMG/4.png',  color:'#10B981', bg:'rgba(16,185,129,0.12)' },
+  { name:'AF Courses',      icon:'📚', img:'/IMG/5.png',  color:'#3B82F6', bg:'rgba(59,130,246,0.12)' },
+  { name:'ZenoPulsky',      icon:'🎯', img:'/IMG/6.png',  color:'#EF4444', bg:'rgba(239,68,68,0.12)' },
+  { name:'AcademeForge AI', icon:'🤖', img:'/IMG/7.png',  color:'#06B6D4', bg:'rgba(6,182,212,0.12)' },
+  { name:'AF Labs',         icon:'🔬', img:'/IMG/8.png',  color:'#8B5CF6', bg:'rgba(139,92,246,0.12)' },
+  { name:'AF Community',    icon:'👥', img:'/IMG/9.png',  color:'#EC4899', bg:'rgba(236,72,153,0.12)' },
+  { name:'AF Cloud',        icon:'☁️', img:'/IMG/10.png', color:'#64748B', bg:'rgba(100,116,139,0.12)' },
 ];
+
+function appImgTag(a, size, radius){
+  return `<img src="${a.img}" alt="${a.name}" style="width:${size}px;height:${size}px;border-radius:${radius}px;object-fit:cover;display:block;" onerror="this.style.display='none';this.insertAdjacentText('afterend','${a.icon}');"/>`;
+}
 
 /* ── PARTICLES ──────────────────────────────────────── */
 (function(){
@@ -702,10 +710,10 @@ const APPS = [
 
 /* ── BUILD MARQUEES ─────────────────────────────────── */
 function buildMarqueeItems(){
-  const doubled=[...APPS,...APPS]; // seamless loop
+  const doubled=[...APPS,...APPS];
   return doubled.map(a=>`
     <div class="m-app">
-      <div class="m-app-icon" style="background:${a.bg};color:${a.color};">${a.icon}</div>
+      <div class="m-app-icon" style="background:${a.bg};color:${a.color};width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex-shrink:0;overflow:hidden;">${appImgTag(a,28,8)}</div>
       <span class="m-app-name">${a.name}</span>
     </div>`).join('');
 }
@@ -713,14 +721,14 @@ function buildMobileMarqueeItems(){
   const doubled=[...APPS,...APPS];
   return doubled.map(a=>`
     <div class="m2-app">
-      <div class="m2-icon" style="background:${a.bg};color:${a.color};">${a.icon}</div>
+      <div class="m2-icon" style="background:${a.bg};color:${a.color};width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:13px;flex-shrink:0;overflow:hidden;">${appImgTag(a,26,7)}</div>
       <span class="m2-name">${a.name}</span>
     </div>`).join('');
 }
 function buildEcoGrid(){
   return APPS.map(a=>`
     <div class="eco-item">
-      <div class="eco-app-icon" style="background:${a.bg};color:${a.color};">${a.icon}</div>
+      <div class="eco-app-icon" style="background:${a.bg};color:${a.color};width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:16px;flex-shrink:0;overflow:hidden;">${appImgTag(a,32,9)}</div>
       <div class="eco-app-info">
         <div class="eco-app-name">${a.name}</div>
         <div class="eco-app-check">✓ Uses new password</div>
@@ -730,7 +738,7 @@ function buildEcoGrid(){
 function buildSuccessGrid(){
   return APPS.map(a=>`
     <div class="suc-item">
-      <div class="suc-icon" style="background:${a.bg};color:${a.color};">${a.icon}</div>
+      <div class="suc-icon" style="background:${a.bg};color:${a.color};width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex-shrink:0;overflow:hidden;">${appImgTag(a,30,8)}</div>
       <div>
         <div class="suc-name">${a.name}</div>
         <div class="suc-check">✓ Updated</div>
