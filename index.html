@@ -1,590 +1,243 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="light">
 <head>
-<script>
-!function(){
-  const t=localStorage.getItem('af_dark_mode')==='1'?'dark':'light';
-  document.documentElement.setAttribute('data-theme',t);
-}();
-</script>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="theme-color" content="#5B5BD6"/>
-<title>Reset Account Password · AcademeForge</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet"/>
+<script>(()=>{var v=localStorage.getItem("af_dark_mode");var isDark;if(v==="1")isDark=true;else if(v==="0")isDark=false;else isDark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.setAttribute("data-theme",isDark?"dark":"light")})()</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffe6e1">
+<title>Reset Password · AcademeForge</title>
+<link rel="icon" href="https://academeforge.in/IMG/logo.png">
+<link rel="shortcut icon" href="https://academeforge.in/IMG/logo.png">
+<link rel="apple-touch-icon" href="https://academeforge.in/IMG/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.min.css?v=6.0">
 <style>
-/* ─── TOKENS ─────────────────────────────────────────────── */
-:root{
-  --p:#5B5BD6; --p2:#4040B8; --p3:#7070E8; --pl:#A5A5F4;
-  --acc:#00C2CB; --acc2:#00A5AE;
-  --ok:#16A34A; --err:#DC2626; --warn:#D97706;
-  --bg:#F2F3FA; --surface:#FFFFFF; --card:rgba(255,255,255,0.92);
-  --glass:rgba(255,255,255,0.12); --glass2:rgba(255,255,255,0.18);
-  --inp:#F5F6FD; --inpf:#FFFFFF;
-  --t1:#0D0E1E; --t2:#4B4C6A; --t3:#8B8CA8; --tw:#FFFFFF;
-  --b1:rgba(91,91,214,0.14); --bc:rgba(91,91,214,0.18); --bi:#E2E3F0;
-  --sh:0 2px 20px rgba(91,91,214,0.10),0 1px 4px rgba(0,0,0,0.04);
-  --sh2:0 8px 32px rgba(91,91,214,0.16),0 2px 8px rgba(0,0,0,0.06);
-  --shb:0 4px 20px rgba(91,91,214,0.32),0 1px 4px rgba(91,91,214,0.2);
-  --shg:0 0 40px rgba(91,91,214,0.2);
-  --r1:8px; --r2:14px; --r3:20px; --r4:28px; --rf:9999px;
-  --fd:'Plus Jakarta Sans',sans-serif; --fb:'Inter',sans-serif;
-  --left-w:560px;
+/* ── Reset-page-specific additions ────────────────────── */
+
+/* Step tracker */
+.step-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 1.75rem;
 }
-[data-theme="dark"]{
-  --bg:#080A16; --surface:#0E1022; --card:rgba(18,20,48,0.96);
-  --glass:rgba(255,255,255,0.06); --glass2:rgba(255,255,255,0.10);
-  --inp:#141628; --inpf:#1A1C38;
-  --t1:#EEEFFE; --t2:#9899BE; --t3:#5A5B80; --tw:#FFFFFF;
-  --b1:rgba(160,160,255,0.16); --bc:rgba(160,160,255,0.20); --bi:rgba(160,160,255,0.14);
-  --sh:0 2px 20px rgba(0,0,0,0.5),0 1px 4px rgba(0,0,0,0.3);
-  --sh2:0 8px 40px rgba(0,0,0,0.6),0 2px 8px rgba(0,0,0,0.4);
-  --shb:0 4px 24px rgba(91,91,214,0.45),0 1px 6px rgba(91,91,214,0.3);
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+.step-item:last-child { flex: none; }
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+  background: var(--input-bg);
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.step-circle.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(251,113,133,0.1);
+}
+.step-circle.done {
+  border-color: var(--success);
+  color: #fff;
+  background: var(--success);
+}
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+.step-line.done { background: var(--success); }
+
+/* Step area separator */
+.step-area {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border);
+}
+.step-area-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.step-area-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.step-area-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
-/* ─── RESET ──────────────────────────────────────────────── */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html{font-size:15px;-webkit-text-size-adjust:100%;height:100%;scroll-behavior:smooth;}
-body{font-family:var(--fb);background:var(--bg);color:var(--t1);min-height:100dvh;margin:0;overflow-x:hidden;}
-button{font-family:var(--fb);cursor:pointer;border:none;background:none;color:inherit;}
-a{text-decoration:none;color:var(--p);font-weight:600;}
-input{font-family:var(--fb);}
-.hidden{display:none!important;}
-
-/* ─── ANIMATED BG BLOBS ──────────────────────────────────── */
-.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.35;animation:blobDrift 18s ease-in-out infinite;}
-[data-theme="dark"] .blob{opacity:0.22;}
-.blob-1{width:600px;height:600px;background:radial-gradient(circle,#5B5BD6,transparent 70%);top:-200px;left:-200px;animation-delay:0s;}
-.blob-2{width:500px;height:500px;background:radial-gradient(circle,#00C2CB,transparent 70%);bottom:-150px;right:-100px;animation-delay:-6s;}
-.blob-3{width:400px;height:400px;background:radial-gradient(circle,#9B5CF6,transparent 70%);top:40%;left:40%;animation-delay:-12s;}
-@keyframes blobDrift{
-  0%,100%{transform:translate(0,0) scale(1);}
-  33%{transform:translate(40px,-30px) scale(1.06);}
-  66%{transform:translate(-30px,40px) scale(0.94);}
+/* Resend / ghost link button */
+.btn-ghost-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+  font-family: var(--font-body);
+}
+.btn-ghost-link:hover { color: var(--primary); }
+.btn-ghost-link:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  color: var(--text-muted);
 }
 
-/* ─── FLOATING PARTICLES ─────────────────────────────────── */
-.particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
-.particle{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--p3);opacity:0;animation:particleFloat linear infinite;}
-@keyframes particleFloat{
-  0%{opacity:0;transform:translateY(100vh) scale(0);}
-  10%{opacity:0.6;}
-  90%{opacity:0.4;}
-  100%{opacity:0;transform:translateY(-20vh) scale(1.5);}
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
 }
-
-/* ─── LAYOUT ─────────────────────────────────────────────── */
-.page-root{display:flex;min-height:100dvh;position:relative;z-index:1;}
-
-/* Left Hero Panel */
-.hero-panel{
-  display:none;
-  width:var(--left-w);
-  flex-shrink:0;
-  flex-direction:column;
-  padding:0;
-  position:sticky;
-  top:0;
-  height:100dvh;
-  overflow:hidden;
-}
-@media(min-width:960px){.hero-panel{display:flex;}}
-
-.hero-inner{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  padding:48px 48px 40px;
-  background:linear-gradient(155deg,#1A1B3C 0%,#0D0E25 40%,#091018 100%);
-  position:relative;
-  overflow:hidden;
-}
-.hero-grad-accent{
-  position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 70% 50% at 20% 20%,rgba(91,91,214,0.3) 0%,transparent 70%),
-             radial-gradient(ellipse 60% 50% at 80% 80%,rgba(0,194,203,0.2) 0%,transparent 70%);
-}
-
-/* Hero Header */
-.hero-logo-row{display:flex;align-items:center;gap:14px;position:relative;z-index:2;margin-bottom:48px;}
-.hero-logo-mark{
-  width:52px;height:52px;border-radius:14px;
-  background:linear-gradient(135deg,var(--p),var(--acc));
-  display:grid;place-items:center;font-size:24px;
-  box-shadow:0 8px 24px rgba(91,91,214,0.45);
-  flex-shrink:0;overflow:hidden;padding:0;
-}
-.hero-logo-mark img{width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;}
-.hero-brand-name{font-family:var(--fd);font-size:17px;font-weight:800;color:#fff;letter-spacing:-0.01em;}
-.hero-brand-sub{font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
-
-/* Hero Headline */
-.hero-headline-section{position:relative;z-index:2;margin-bottom:auto;}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:7px;
-  background:rgba(91,91,214,0.18);border:1px solid rgba(91,91,214,0.35);
-  border-radius:var(--rf);padding:5px 14px;margin-bottom:22px;
-}
-.hero-eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--pl);animation:pulse 2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
-.hero-eyebrow span{font-size:11.5px;font-weight:700;color:var(--pl);letter-spacing:0.06em;text-transform:uppercase;}
-
-.hero-h1{
-  font-family:var(--fd);font-size:36px;font-weight:900;color:#fff;
-  line-height:1.12;letter-spacing:-0.04em;margin-bottom:16px;
-}
-.hero-h1 em{
-  font-style:normal;
-  background:linear-gradient(90deg,var(--pl),var(--acc));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.hero-p{font-size:14.5px;font-weight:400;color:rgba(255,255,255,0.65);line-height:1.65;max-width:400px;margin-bottom:32px;}
-
-/* One Password Card */
-.one-pw-card{
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:var(--r3);
-  padding:22px 24px;
-  backdrop-filter:blur(16px);
-  position:relative;overflow:hidden;
-  margin-bottom:36px;
-}
-.one-pw-card::before{
-  content:'';position:absolute;inset:-1px;border-radius:var(--r3);
-  background:linear-gradient(135deg,rgba(91,91,214,0.2),rgba(0,194,203,0.1),transparent 60%);
-  pointer-events:none;
-}
-.one-pw-icon{font-size:28px;margin-bottom:12px;}
-.one-pw-title{font-family:var(--fd);font-size:20px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-0.02em;}
-.one-pw-title span{color:var(--pl);}
-.one-pw-desc{font-size:13px;color:rgba(255,255,255,0.55);font-weight:500;line-height:1.5;}
-.one-pw-bottom{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);}
-.one-pw-stat{font-size:12px;color:rgba(255,255,255,0.45);font-weight:500;}
-.one-pw-stat strong{color:rgba(255,255,255,0.85);font-weight:700;}
-
-/* ─── MARQUEE ────────────────────────────────────────────── */
-.marquee-section{position:relative;z-index:2;overflow:hidden;margin:0 -48px;padding:0;}
-.marquee-label{font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;padding:0 48px;}
-.marquee-track{display:flex;overflow:hidden;gap:0;}
-.marquee-belt{
-  display:flex;gap:10px;flex-shrink:0;
-  animation:marqueeScroll 28s linear infinite;
-  padding-bottom:4px;
-}
-.marquee-track:hover .marquee-belt{animation-play-state:paused;}
-@keyframes marqueeScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}
-
-}
-.m-app{
-  display:flex;align-items:center;gap:9px;
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.10);
-  border-radius:var(--rf);
-  padding:8px 16px 8px 10px;
-  white-space:nowrap;
-  backdrop-filter:blur(8px);
-  transition:background 0.2s,border-color 0.2s;
-  flex-shrink:0;
-}
-.m-app:hover{background:rgba(255,255,255,0.13);border-color:rgba(255,255,255,0.20);}
-.m-app-icon{
-  width:28px;height:28px;border-radius:8px;
-  display:grid;place-items:center;font-size:14px;flex-shrink:0;
-}
-.m-app-name{font-size:12.5px;font-weight:700;color:rgba(255,255,255,0.85);}
-
-/* ─── RIGHT FORM PANEL ───────────────────────────────────── */
-.form-panel{
-  flex:1;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding:32px 20px 48px;
-  background:var(--bg);
-  min-height:100dvh;
-}
-
-/* Mobile hero */
-.mobile-hero{display:block;text-align:center;margin-bottom:28px;}
-@media(min-width:960px){.mobile-hero{display:none!important;}}
-.mobile-logo-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px;}
-.mobile-logo-mark{
-  width:44px;height:44px;border-radius:12px;
-  background:linear-gradient(135deg,var(--p),var(--acc));
-  display:grid;place-items:center;font-size:20px;
-  box-shadow:var(--shb);overflow:hidden;padding:0;
-}
-.mobile-logo-mark img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;}
-.mobile-brand{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--t1);}
-.mobile-brand-sub{font-size:10px;color:var(--t3);letter-spacing:0.06em;text-transform:uppercase;margin-top:1px;}
-.mobile-h1{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--t1);letter-spacing:-0.03em;margin-bottom:8px;}
-.mobile-p{font-size:13px;color:var(--t2);line-height:1.6;max-width:340px;margin:0 auto;}
-
-/* Form Card */
-.form-wrap{width:100%;max-width:440px;padding-top:20px;}
-@media(min-width:960px){.form-wrap{padding-top:40px;}}
-
-.form-card{
-  background:var(--card);
-  border:1px solid var(--bc);
-  border-radius:var(--r4);
-  box-shadow:var(--sh2);
-  padding:36px 32px;
-  position:relative;
-  overflow:hidden;
-}
-.form-card::before{
-  content:'';position:absolute;top:-60px;right:-60px;
-  width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(91,91,214,0.07),transparent 70%);
-  pointer-events:none;
-}
-
-/* Step indicator */
-.step-track{display:flex;align-items:center;gap:0;margin-bottom:28px;position:relative;z-index:1;}
-.step-item{display:flex;align-items:center;gap:0;flex:1;}
-.step-item:last-child{flex:none;}
-.step-circle{
-  width:28px;height:28px;border-radius:50%;
-  display:grid;place-items:center;
-  font-size:11px;font-weight:800;
-  border:2px solid var(--bi);
-  color:var(--t3);
-  background:var(--inp);
-  transition:all 0.3s;
-  flex-shrink:0;
-}
-.step-circle.active{border-color:var(--p);color:var(--p);background:rgba(91,91,214,0.1);}
-.step-circle.done{border-color:var(--ok);color:#fff;background:var(--ok);}
-.step-line{flex:1;height:2px;background:var(--bi);transition:background 0.3s;}
-.step-line.done{background:var(--ok);}
-.step-label{font-size:10px;font-weight:700;color:var(--t3);display:none;}
-
-/* Form header */
-.fcard-head{text-align:center;margin-bottom:28px;position:relative;z-index:1;}
-.fcard-icon{
-  width:56px;height:56px;border-radius:16px;margin:0 auto 14px;
-  display:grid;place-items:center;font-size:26px;
-  background:linear-gradient(135deg,rgba(91,91,214,0.12),rgba(0,194,203,0.08));
-  border:1px solid var(--b1);
-  box-shadow:0 4px 16px rgba(91,91,214,0.12);
-}
-.fcard-title{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--t1);letter-spacing:-0.03em;margin-bottom:6px;}
-.fcard-sub{font-size:13px;color:var(--t2);line-height:1.6;font-weight:400;}
-
-/* Form fields */
-.field-group{position:relative;z-index:1;margin-top:18px;}
-.field-label{display:block;font-size:12px;font-weight:700;color:var(--t2);margin-bottom:7px;letter-spacing:0.01em;}
-.field-input{
-  width:100%;min-height:50px;
-  padding:13px 16px;
-  border-radius:var(--r2);
-  border:1.5px solid var(--bc);
-  background:var(--inp);
-  color:var(--t1);
-  font-size:14.5px;
-  font-weight:500;
-  outline:none;
-  transition:all 0.2s;
-  -webkit-appearance:none;
-}
-.field-input:focus{
-  border-color:var(--p);
-  box-shadow:0 0 0 4px rgba(91,91,214,0.10);
-  background:var(--inpf);
-}
-.field-input::placeholder{color:var(--t3);font-weight:400;}
-.field-hint{font-size:11.5px;color:var(--t3);margin-top:6px;font-weight:400;}
-
-/* Buttons */
-.btn-primary{
-  width:100%;min-height:52px;padding:14px 20px;
-  border-radius:var(--r2);
-  margin-top:22px;
-  font-size:15px;font-weight:700;color:#fff;
-  background:linear-gradient(135deg,var(--p),var(--p2));
-  box-shadow:var(--shb);
-  transition:transform 0.15s,box-shadow 0.15s,opacity 0.15s;
-  letter-spacing:-0.01em;
-  position:relative;z-index:1;
-  overflow:hidden;
-}
-.btn-primary::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,0.12),transparent);
-  pointer-events:none;
-}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(91,91,214,0.4);}
-.btn-primary:active{transform:translateY(0) scale(0.99);}
-.btn-primary:disabled{opacity:0.65;pointer-events:none;}
-
-.btn-ghost{
-  width:100%;min-height:48px;padding:12px 20px;
-  border-radius:var(--r2);margin-top:10px;
-  font-size:14px;font-weight:600;color:var(--t2);
-  background:transparent;border:1.5px solid var(--bc);
-  transition:all 0.15s;position:relative;z-index:1;
-}
-.btn-ghost:hover{background:var(--grp,rgba(91,91,214,0.05));border-color:var(--p);color:var(--p);}
-.btn-ghost:active{transform:scale(0.99);}
-
-/* OTP & PW areas */
-.step-area{margin-top:22px;padding-top:22px;border-top:1px dashed var(--bc);position:relative;z-index:1;}
-.step-area-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.step-area-badge{
-  width:22px;height:22px;border-radius:50%;
-  background:var(--p);color:#fff;
-  font-size:11px;font-weight:800;
-  display:grid;place-items:center;flex-shrink:0;
-}
-.step-area-label{font-size:13px;font-weight:700;color:var(--t1);}
-
-/* Messages */
-.msg{
-  display:none;margin-top:16px;padding:12px 16px;
-  border-radius:var(--r2);font-size:13px;font-weight:500;line-height:1.5;
-  position:relative;z-index:1;
-}
-.msg.ok{display:flex;align-items:flex-start;gap:10px;background:rgba(22,163,74,0.08);color:#15803D;border:1px solid rgba(22,163,74,0.18);}
-.msg.err{display:flex;align-items:flex-start;gap:10px;background:rgba(220,38,38,0.08);color:#B91C1C;border:1px solid rgba(220,38,38,0.18);}
-.msg.info{display:flex;align-items:flex-start;gap:10px;background:rgba(91,91,214,0.07);color:var(--p);border:1px solid var(--b1);}
-[data-theme="dark"] .msg.ok{color:#4ADE80;}
-[data-theme="dark"] .msg.err{color:#F87171;}
-.msg-ico{flex-shrink:0;font-size:14px;margin-top:0px;}
-.msg-txt{flex:1;}
 
 /* Security badge */
-.security-row{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  margin-top:20px;font-size:12px;color:var(--t3);font-weight:500;
-  position:relative;z-index:1;
+.security-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 1.25rem;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
 }
-.security-row svg{width:13px;height:13px;fill:var(--t3);}
+.security-row svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
 
-/* Divider */
-.divider{height:1px;background:var(--bi);margin:24px 0;position:relative;z-index:1;}
+/* Message: reuse signup page .msg but it uses hidden class there;
+   here we adapt to show/hide via class */
+.msg { margin-top: 1rem; }
 
-/* ─── ECOSYSTEM SECTION (right panel, below form on all) ─── */
-.ecosystem-section{width:100%;max-width:440px;margin-top:32px;}
-.eco-header{text-align:center;margin-bottom:20px;}
-.eco-title{font-family:var(--fd);font-size:17px;font-weight:800;color:var(--t1);margin-bottom:6px;letter-spacing:-0.02em;}
-.eco-sub{font-size:13px;color:var(--t2);line-height:1.55;}
+/* Success state */
+#boxSuccess { text-align: center; }
+.success-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));
+  border: 2px solid rgba(16,185,129,0.3);
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  box-shadow: 0 0 0 10px rgba(16,185,129,0.07), 0 0 0 20px rgba(16,185,129,0.04);
+  animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes successPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.success-title {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+.success-sub {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
 
-/* Mobile marquee */
-.mobile-marquee{overflow:hidden;margin:0 -20px;padding:0;}
-.mobile-belt{
-  display:flex;gap:8px;
-  animation:marqueeScroll 22s linear infinite;
-  flex-shrink:0;
-}
-.mobile-marquee:hover .mobile-belt{animation-play-state:paused;}
-.mobile-marquee-track{display:flex;overflow:hidden;}
-.m-app-icon img,.m2-icon img,.eco-app-icon img,.suc-icon img{
-  width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;
-}
-  display:flex;align-items:center;gap:8px;
-  background:var(--card);border:1px solid var(--bc);
-  border-radius:var(--rf);padding:8px 14px 8px 8px;
-  white-space:nowrap;flex-shrink:0;
-  box-shadow:var(--sh);
-}
-.m2-icon{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:13px;flex-shrink:0;}
-.m2-name{font-size:12px;font-weight:700;color:var(--t2);}
-
-/* Feature app grid */
-.eco-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;}
-.eco-item{
-  display:flex;align-items:center;gap:10px;
-  background:var(--card);border:1px solid var(--bc);
-  border-radius:var(--r2);padding:12px 14px;
-  box-shadow:var(--sh);transition:box-shadow 0.2s,transform 0.2s;
-}
-.eco-item:hover{box-shadow:var(--sh2);transform:translateY(-1px);}
-.eco-app-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:16px;flex-shrink:0;}
-.eco-app-info{}
-.eco-app-name{font-size:12.5px;font-weight:700;color:var(--t1);margin-bottom:1px;}
-.eco-app-check{font-size:11px;font-weight:500;color:var(--ok);}
-
-.eco-bottom-msg{
-  margin-top:16px;text-align:center;
-  font-size:12.5px;color:var(--t3);font-weight:500;
-  padding:14px;background:var(--card);border:1px solid var(--bc);
-  border-radius:var(--r2);
-}
-.eco-bottom-msg strong{color:var(--t2);font-weight:700;}
-
-/* ─── SUCCESS VIEW ───────────────────────────────────────── */
-#boxSuccess{text-align:center;}
-.success-animation{margin-bottom:20px;position:relative;z-index:1;}
-.success-ring{
-  width:80px;height:80px;border-radius:50%;margin:0 auto;
-  background:linear-gradient(135deg,rgba(22,163,74,0.15),rgba(22,163,74,0.05));
-  border:2px solid rgba(22,163,74,0.3);
-  display:grid;place-items:center;font-size:36px;
-  box-shadow:0 0 0 12px rgba(22,163,74,0.07),0 0 0 24px rgba(22,163,74,0.04);
-  animation:successPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
-}
-@keyframes successPop{from{transform:scale(0.5);opacity:0;}to{transform:scale(1);opacity:1;}}
-.success-title{font-family:var(--fd);font-size:24px;font-weight:900;color:var(--t1);letter-spacing:-0.03em;margin-bottom:8px;position:relative;z-index:1;}
-.success-sub{font-size:13.5px;color:var(--t2);line-height:1.65;margin-bottom:24px;font-weight:400;position:relative;z-index:1;}
-.success-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
-.suc-item{
-  display:flex;align-items:center;gap:9px;
-  background:rgba(22,163,74,0.06);border:1px solid rgba(22,163,74,0.16);
-  border-radius:var(--r2);padding:10px 12px;
-}
-.suc-icon{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex-shrink:0;}
-.suc-name{font-size:12px;font-weight:700;color:var(--t1);}
-.suc-check{font-size:11px;font-weight:600;color:var(--ok);}
-.success-footer{
-  font-size:12.5px;color:var(--t3);padding:14px 16px;
-  background:rgba(22,163,74,0.05);border:1px solid rgba(22,163,74,0.14);
-  border-radius:var(--r2);font-weight:500;position:relative;z-index:1;
-}
-.success-footer strong{color:var(--ok);}
-
-/* ─── DARK MODE TOGGLE ───────────────────────────────────── */
-.dark-toggle{
-  position:fixed;top:16px;right:16px;z-index:999;
-  width:38px;height:38px;border-radius:50%;
-  background:var(--card);border:1px solid var(--bc);
-  box-shadow:var(--sh);
-  display:grid;place-items:center;font-size:17px;
-  transition:transform 0.2s;
-}
-.dark-toggle:hover{transform:scale(1.1);}
-
-/* ─── RESPONSIVE ─────────────────────────────────────────── */
-@media(max-width:540px){
-  .form-card{padding:26px 20px;}
-  .eco-grid{grid-template-columns:1fr 1fr;}
-  .success-grid{grid-template-columns:1fr 1fr;}
-  .hero-h1{font-size:28px;}
-}
-@media(min-width:960px){
-  .form-panel{padding:0 48px;}
-  .ecosystem-section{display:none;}
+/* Hint text under inputs */
+.field-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.375rem;
 }
 </style>
 </head>
 <body>
 
-<!-- BG BLOBS -->
-<div class="bg-blobs" aria-hidden="true">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-</div>
-<!-- PARTICLES -->
-<div class="particles" id="particles" aria-hidden="true"></div>
+<div class="page-bg"></div>
 
-<!-- DARK MODE TOGGLE -->
-<button class="dark-toggle" id="dmToggle" aria-label="Toggle dark mode" onclick="toggleDark()">🌙</button>
+<main class="main-content">
+  <div class="split-modal">
 
-<div class="page-root">
+    <!-- Close / back to home -->
+    <a href="https://academeforge.in/" class="close-btn" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </a>
 
-  <!-- ── LEFT HERO PANEL (desktop only) ── -->
-  <div class="hero-panel">
-    <div class="hero-inner">
-      <div class="hero-grad-accent"></div>
-
-      <!-- Brand -->
-      <div class="hero-logo-row">
-        <div class="hero-logo-mark"><img src="/IMG/logo.png" alt="AcademeForge" onerror="this.style.display='none';this.parentElement.textContent='⬡';"/></div>
-        <div>
-          <div class="hero-brand-name">AcademeForge</div>
-          <div class="hero-brand-sub">Account Services</div>
-        </div>
-      </div>
-
-      <!-- Headline -->
-      <div class="hero-headline-section">
-        <div class="hero-eyebrow">
-          <div class="hero-eyebrow-dot"></div>
-          <span>Central Account Management</span>
-        </div>
-        <h1 class="hero-h1">One account.<br><em>Every AcademeForge<br>application.</em></h1>
-        <p class="hero-p">Your AcademeForge Account is the single identity that connects every service in the ecosystem. Reset your password once — it updates everywhere, instantly.</p>
-
-        <!-- One Password Card -->
-        <div class="one-pw-card">
-          <div class="one-pw-icon">🔒</div>
-          <div class="one-pw-title">One Password.<br><span>Unlimited AcademeForge Apps.</span></div>
-          <div class="one-pw-desc">Reset once. Access everything across the entire AcademeForge Ecosystem — now and every app we build in the future.</div>
-          <div class="one-pw-bottom">
-            <div class="one-pw-stat">Connected to <strong>10+ applications</strong> · Updated <strong>instantly</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Marquee -->
-      <div class="marquee-section">
-        <div class="marquee-label">AcademeForge Applications</div>
-        <div class="marquee-track">
-          <div class="marquee-belt" id="desktopBelt">
-            <!-- Populated by JS -->
-          </div>
-        </div>
+    <!-- Left pane: hero image -->
+    <div class="split-left">
+      <img src="https://academeforge.in/IMG/signup_hero.jpg" alt="AcademeForge" class="hero-image">
+      <div class="brand-overlay">
+        <img src="https://academeforge.in/IMG/logo.png" alt="Logo" class="logo-sm" onerror='this.style.display="none"'>
+        <span>AcademeForge.</span>
       </div>
     </div>
-  </div>
 
-  <!-- ── RIGHT FORM PANEL ── -->
-  <div class="form-panel">
-    <div class="form-wrap">
+    <!-- Right pane: form -->
+    <div class="split-right">
 
-      <!-- Mobile Header -->
-      <div class="mobile-hero">
-        <div class="mobile-logo-row">
-          <div class="mobile-logo-mark"><img src="/IMG/logo.png" alt="AcademeForge" onerror="this.style.display='none';this.parentElement.textContent='⬡';"/></div>
-          <div>
-            <div class="mobile-brand">AcademeForge</div>
-            <div class="mobile-brand-sub">Account Services</div>
+      <!-- ── MAIN RESET FORM ── -->
+      <div id="boxForgot" class="form-container">
+        <h1 class="form-title">Reset Password</h1>
+
+        <!-- Step tracker -->
+        <div class="step-track" id="stepTrack">
+          <div class="step-item">
+            <div class="step-circle active" id="sc1">1</div>
+            <div class="step-line" id="sl1"></div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle" id="sc2">2</div>
+            <div class="step-line" id="sl2"></div>
+          </div>
+          <div class="step-item">
+            <div class="step-circle" id="sc3">3</div>
           </div>
         </div>
-        <h1 class="mobile-h1">Reset Account Password</h1>
-        <p class="mobile-p">Your new password will update across every AcademeForge application connected to your account.</p>
-      </div>
 
-      <!-- ── STEP TRACK ── -->
-      <div class="step-track" id="stepTrack">
-        <div class="step-item">
-          <div class="step-circle active" id="sc1">1</div>
-          <div class="step-line" id="sl1"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle" id="sc2">2</div>
-          <div class="step-line" id="sl2"></div>
-        </div>
-        <div class="step-item">
-          <div class="step-circle" id="sc3">3</div>
-        </div>
-      </div>
-
-      <!-- ── RESET FORM CARD ── -->
-      <div class="form-card" id="boxForgot">
-
-        <div class="fcard-head">
-          <div class="fcard-icon">🔐</div>
-          <h2 class="fcard-title">Reset Your Password</h2>
-          <p class="fcard-sub">Enter your AcademeForge Account identifier to receive a verification code.</p>
-        </div>
-
-        <!-- Step 1: Find Account -->
+        <!-- Step 1: Find account -->
         <div id="s1Area">
+          <p class="section-desc" style="margin-bottom:1.25rem;">Enter your registered Account ID, phone number, or email to receive a verification code.</p>
           <div class="field-group">
             <label class="field-label" for="forgotLogin">Account ID / Phone / Email</label>
-            <input id="forgotLogin" class="field-input" type="text" placeholder="Enter your registered identifier" autocomplete="username"/>
+            <div class="input-wrapper">
+              <span class="input-icon">🔎</span>
+              <input id="forgotLogin" class="field-input" type="text" placeholder="Enter your registered identifier" autocomplete="username">
+            </div>
             <div class="field-hint">The same credentials you use across all AcademeForge apps.</div>
           </div>
-          <button class="btn-primary" id="btnFindAccount" onclick="findStudentForReset()">
-            Send Verification Code
-          </button>
+          <button class="btn-primary" id="btnFindAccount" type="button" onclick="findStudentForReset()">Send Verification Code</button>
         </div>
 
         <!-- Step 2: OTP -->
@@ -593,221 +246,179 @@ input{font-family:var(--fb);}
             <div class="step-area-badge">2</div>
             <div class="step-area-label">Verify your identity</div>
           </div>
-          <div class="field-group" style="margin-top:0;">
+          <div class="field-group" style="margin-bottom:0;">
             <label class="field-label" for="forgotOtp">Verification Code</label>
-            <input id="forgotOtp" class="field-input" type="text" inputmode="numeric" maxlength="6" placeholder="6-digit code from your email" autocomplete="one-time-code"/>
+            <div class="input-wrapper">
+              <input id="forgotOtp" class="field-input otp-input" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code">
+            </div>
             <div class="field-hint">Sent to your registered email address.</div>
           </div>
-          <button class="btn-primary" id="btnVerifyOtp" onclick="verifyForgotOtp()">Verify Code</button>
-          <button class="btn-ghost" onclick="resendOtp()">Resend code</button>
+          <button class="btn-primary" id="btnVerifyOtp" type="button" onclick="verifyForgotOtp()">Verify Code</button>
+          <div class="action-row">
+            <button class="btn-ghost-link" type="button" id="btnResend" onclick="resendOtp()">Resend Code</button>
+            <button class="btn-ghost-link" type="button" onclick="backToStep1()">Change identifier</button>
+          </div>
         </div>
 
-        <!-- Step 3: New Password -->
-        <div id="s3Area" class="step-area hidden" style="border:none;padding-top:0;margin-top:0;">
-          <div class="step-area-header" style="margin-top:16px;">
+        <!-- Step 3: New password -->
+        <div id="s3Area" class="step-area hidden">
+          <div class="step-area-header">
             <div class="step-area-badge">3</div>
             <div class="step-area-label">Create your new password</div>
           </div>
-          <div class="field-group" style="margin-top:0;">
+          <div class="field-group" style="margin-bottom:0;">
             <label class="field-label" for="newPassword">New Password</label>
-            <input id="newPassword" class="field-input" type="password" placeholder="At least 6 characters" autocomplete="new-password"/>
-            <div class="field-hint">This password will immediately update across all connected AcademeForge applications.</div>
+            <div class="input-wrapper pw-wrap">
+              <span class="input-icon">🔒</span>
+              <input id="newPassword" class="field-input" type="password" placeholder="At least 6 characters" autocomplete="new-password">
+              <button class="pw-eye" type="button" onclick="toggleNewPw()" id="newPwEye" aria-label="Show password">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <div class="field-hint">This will immediately update across all connected AcademeForge applications.</div>
           </div>
-          <button class="btn-primary" id="btnResetPassword" onclick="resetPassword()">Update Account Password</button>
+          <button class="btn-primary" id="btnResetPassword" type="button" onclick="resetPassword()">Update Password</button>
         </div>
 
         <!-- Message box -->
-        <div id="authMsg" class="msg">
-          <span class="msg-ico" id="msgIco"></span>
+        <div id="authMsg" class="msg hidden">
           <span class="msg-txt" id="msgTxt"></span>
         </div>
 
-        <!-- Security row -->
+        <!-- Security badge -->
         <div class="security-row">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+          </svg>
           <span>Secured by AcademeForge Identity · TLS encrypted</span>
         </div>
 
+        <div class="divider"><span>Already know your password?</span></div>
+        <div class="login-link"><a href="https://academeforge.in/login">Log in here</a></div>
       </div>
 
-      <!-- ── SUCCESS CARD ── -->
-      <div class="form-card hidden" id="boxSuccess" style="animation:fadeUp 0.5s ease forwards;">
-        <style>@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}</style>
-        <div class="success-animation">
-          <div class="success-ring">✓</div>
-        </div>
-        <h2 class="success-title">Password Updated</h2>
+      <!-- ── SUCCESS ── -->
+      <div id="boxSuccess" class="form-container hidden">
+        <div class="success-ring">✓</div>
+        <h2 class="success-title">Password Updated!</h2>
         <p class="success-sub">Your AcademeForge Account password has been changed successfully. You can now sign in to every AcademeForge application using your new password.</p>
-        <div class="success-grid" id="successGrid">
-          <!-- Populated by JS -->
-        </div>
-        <div class="success-footer">
-          <strong>✓ Active across the entire AcademeForge Ecosystem</strong><br>
-          Your new password works on every current and future AcademeForge application.
-        </div>
-      </div>
-
-      <!-- ── MOBILE ECOSYSTEM SECTION ── -->
-      <div class="ecosystem-section">
-        <div class="divider"></div>
-        <div class="eco-header">
-          <h3 class="eco-title">Your password updates everywhere</h3>
-          <p class="eco-sub">Once reset, sign in with your new password across all AcademeForge applications — instantly.</p>
-        </div>
-
-        <!-- Mobile marquee -->
-        <div class="mobile-marquee" style="margin-bottom:16px;">
-          <div class="mobile-marquee-track">
-            <div class="mobile-belt" id="mobileBelt"></div>
-          </div>
-        </div>
-
-        <div class="eco-grid" id="ecoGrid">
-          <!-- Populated by JS -->
-        </div>
-        <div class="eco-bottom-msg">
-          <strong>Every future AcademeForge application</strong> will also use this same account and password automatically.
-        </div>
+        <a href="https://academeforge.in/login" class="btn-primary" style="display:inline-block;text-align:center;text-decoration:none;line-height:52px;">Continue to Login</a>
       </div>
 
     </div>
   </div>
-</div>
+</main>
 
-<!-- ─────────────────────────────────────────────────── -->
+<footer class="footer bg-dark"><div class="container"><div class="footer-nav"><div class="footer-col brand-col"><a href="/" class="brand"><img src="https://academeforge.in/IMG/logo.png" alt="AcademeForge" width="24" height="24" loading="lazy" decoding="async" onerror='this.style.display="none"'><div class="brand-text-wrapper"><span class="brand-text">AcademeForge</span> <span class="brand-tagline i18n-text">LEARNING BEYOND THE CLASSROOM</span></div></a><div class="brand-contact"><a href="mailto:help@academeforge.in">help@academeforge.in</a></div></div><div class="footer-col footer-acc"><button class="footer-acc-toggle" aria-expanded="false"><h4 class="i18n-text">Products</h4><span class="footer-acc-icon"></span></button><div class="footer-acc-body"><a href="https://nexus.academeforge.in" class="i18n-text">AF Nexus</a><a href="https://ai.academeforge.in" class="i18n-text">AcademeForge AI</a><a href="https://ast.academeforge.in" class="i18n-text">Scholars Test</a><a href="https://timezy.academeforge.in" class="i18n-text">Timezy</a><a href="https://capacity.academeforge.in" class="i18n-text">Capacity</a><a href="https://zenopulsky.academeforge.in" class="i18n-text">Zenopulsky</a><a href="https://nexora.academeforge.in" class="i18n-text">Nexora Studio</a><a href="https://shop.academeforge.in" class="i18n-text">AF Bazzar</a><a href="https://sudoku.academeforge.in" class="i18n-text">Sudoku Master</a><a href="https://ticxotoe.academeforge.in" class="i18n-text">Tic-XO-Toe</a></div></div><div class="footer-col footer-acc"><button class="footer-acc-toggle" aria-expanded="false"><h4 class="i18n-text">Internship</h4><span class="footer-acc-icon"></span></button><div class="footer-acc-body"><a href="https://academeforge.in/internship/apply/index.html" class="i18n-text">Apply</a><a href="https://academeforge.in/internship/status/index.html" class="i18n-text">Application Status</a><a href="https://academeforge.in/internship/policy/index.html" class="i18n-text">Workspace Policy</a></div></div><div class="footer-col footer-acc"><button class="footer-acc-toggle" aria-expanded="false"><h4 class="i18n-text">Other tools</h4><span class="footer-acc-icon"></span></button><div class="footer-acc-body"><a href="https://academeforge.in/other-tools/verify-certificate/index.html" class="i18n-text">Certificate Verification</a><a href="https://academeforge.in/other-tools/verify-team/index.html" class="i18n-text">Team Verification</a><a href="https://academeforge.in/other-tools/hopenext/index.html" class="i18n-text">HopeNext Portal</a></div></div><div class="footer-col footer-acc"><button class="footer-acc-toggle" aria-expanded="false"><h4 class="i18n-text">Resources</h4><span class="footer-acc-icon"></span></button><div class="footer-acc-body"><a href="https://download.academeforge.in" class="i18n-text">Download Center</a><a href="https://academeforge.in/faq/index.html" class="i18n-text">Help Desk</a><a href="https://academeforge.in/contact/index.html" class="i18n-text">Contact</a></div></div><div class="footer-col footer-acc"><button class="footer-acc-toggle" aria-expanded="false"><h4 class="i18n-text">Legal</h4><span class="footer-acc-icon"></span></button><div class="footer-acc-body"><a href="https://academeforge.in/legal/privacy/index.html" class="i18n-text">Privacy Policy</a><a href="https://academeforge.in/legal/terms/index.html" class="i18n-text">Terms of Service</a></div></div></div><div class="footer-bottom"><div style="font-size:13px;color:var(--text-secondary)">&copy; 2026 AcademeForge. <span class="i18n-text">All rights reserved.</span></div><div class="theme-controls desktop-theme-controls"><button class="theme-btn" data-theme="light" aria-label="Light mode" onclick='setThemeMode("light")'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></button> <button class="theme-btn active" data-theme="system" aria-label="System mode" onclick='setThemeMode("system")'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></button> <button class="theme-btn" data-theme="dark" aria-label="Dark mode" onclick='setThemeMode("dark")'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button></div><div style="display:flex;gap:16px"><a href="https://www.instagram.com/academeforge.in" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a><a href="https://x.com/AcademeForge?s=20" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a><a href="https://www.linkedin.com/company/academeforge/" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a><a href="https://youtube.com/@academeforgepro" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a><a href="https://t.me/+46ubatq-EV0wNjY1" target="_blank" rel="noopener noreferrer" class="footer-social-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></a></div></div></div></footer>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
 
-/* ── APP DATA ──────────────────────────────────────── */
-const APPS = [
-  { name:'AF Nexus',        icon:'🌐', img:'/IMG/1.png',  color:'#5B5BD6', bg:'rgba(91,91,214,0.12)' },
-  { name:'Sudoku Master',   icon:'🧩', img:'/IMG/2.png',  color:'#7C3AED', bg:'rgba(124,58,237,0.12)' },
-  { name:'AF Test Arena',   icon:'⚡', img:'/IMG/3.png',  color:'#F59E0B', bg:'rgba(245,158,11,0.12)' },
-  { name:'AF Programs',     icon:'📋', img:'/IMG/4.png',  color:'#10B981', bg:'rgba(16,185,129,0.12)' },
-  { name:'AF Courses',      icon:'📚', img:'/IMG/5.png',  color:'#3B82F6', bg:'rgba(59,130,246,0.12)' },
-  { name:'ZenoPulsky',      icon:'🎯', img:'/IMG/6.png',  color:'#EF4444', bg:'rgba(239,68,68,0.12)' },
-  { name:'AcademeForge AI', icon:'🤖', img:'/IMG/7.png',  color:'#06B6D4', bg:'rgba(6,182,212,0.12)' },
-  { name:'AF Labs',         icon:'🔬', img:'/IMG/8.png',  color:'#8B5CF6', bg:'rgba(139,92,246,0.12)' },
-  { name:'AF Community',    icon:'👥', img:'/IMG/9.png',  color:'#EC4899', bg:'rgba(236,72,153,0.12)' },
-  { name:'AF Cloud',        icon:'☁️', img:'/IMG/10.png', color:'#64748B', bg:'rgba(100,116,139,0.12)' },
-];
-
-function appImgTag(a, size, radius){
-  return `<img src="${a.img}" alt="${a.name}" style="width:${size}px;height:${size}px;border-radius:${radius}px;object-fit:cover;display:block;" onerror="this.style.display='none';this.insertAdjacentText('afterend','${a.icon}');"/>`;
+/* ── PASSWORD TOGGLE ─────────────────────────────────── */
+function toggleNewPw(){
+  const inp=document.getElementById('newPassword');
+  const eye=document.getElementById('newPwEye');
+  if(!inp||!eye) return;
+  if(inp.type==='password'){ inp.type='text'; eye.textContent='🙈'; }
+  else { inp.type='password'; eye.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>'; }
 }
 
-/* ── PARTICLES ──────────────────────────────────────── */
-(function(){
-  const c=document.getElementById('particles');
-  for(let i=0;i<18;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    p.style.cssText=`left:${Math.random()*100}%;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px;animation-duration:${12+Math.random()*20}s;animation-delay:${-Math.random()*25}s;opacity:0;`;
-    c.appendChild(p);
-  }
-})();
-
-/* ── BUILD MARQUEES ─────────────────────────────────── */
-function buildMarqueeItems(){
-  const doubled=[...APPS,...APPS];
-  return doubled.map(a=>`
-    <div class="m-app">
-      <div class="m-app-icon" style="background:${a.bg};color:${a.color};width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex-shrink:0;overflow:hidden;">${appImgTag(a,28,8)}</div>
-      <span class="m-app-name">${a.name}</span>
-    </div>`).join('');
+/* ── MESSAGE HELPERS ─────────────────────────────────── */
+const ICONS={ok:'✓',err:'✕',info:'ℹ'};
+function showMsg(type,text){
+  const b=document.getElementById('authMsg');
+  if(b) b.className='msg '+type;
+  const msgTxt=document.getElementById('msgTxt');
+  if(msgTxt) msgTxt.textContent=text||'';
 }
-function buildMobileMarqueeItems(){
-  const doubled=[...APPS,...APPS];
-  return doubled.map(a=>`
-    <div class="m2-app">
-      <div class="m2-icon" style="background:${a.bg};color:${a.color};width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:13px;flex-shrink:0;overflow:hidden;">${appImgTag(a,26,7)}</div>
-      <span class="m2-name">${a.name}</span>
-    </div>`).join('');
-}
-function buildEcoGrid(){
-  return APPS.map(a=>`
-    <div class="eco-item">
-      <div class="eco-app-icon" style="background:${a.bg};color:${a.color};width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:16px;flex-shrink:0;overflow:hidden;">${appImgTag(a,32,9)}</div>
-      <div class="eco-app-info">
-        <div class="eco-app-name">${a.name}</div>
-        <div class="eco-app-check">✓ Uses new password</div>
-      </div>
-    </div>`).join('');
-}
-function buildSuccessGrid(){
-  return APPS.map(a=>`
-    <div class="suc-item">
-      <div class="suc-icon" style="background:${a.bg};color:${a.color};width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex-shrink:0;overflow:hidden;">${appImgTag(a,30,8)}</div>
-      <div>
-        <div class="suc-name">${a.name}</div>
-        <div class="suc-check">✓ Updated</div>
-      </div>
-    </div>`).join('');
+function clearMsg(){
+  const b=document.getElementById('authMsg');
+  if(b) b.className='msg hidden';
+  const msgTxt=document.getElementById('msgTxt');
+  if(msgTxt) msgTxt.textContent='';
 }
 
-const db=document.getElementById('desktopBelt');
-const mb=document.getElementById('mobileBelt');
-const eg=document.getElementById('ecoGrid');
-const sg=document.getElementById('successGrid');
-if(db) db.innerHTML=buildMarqueeItems();
-if(mb) mb.innerHTML=buildMobileMarqueeItems();
-if(eg) eg.innerHTML=buildEcoGrid();
-if(sg) sg.innerHTML=buildSuccessGrid();
-
-/* ── DARK MODE ──────────────────────────────────────── */
-function toggleDark(){
-  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
-  document.documentElement.setAttribute('data-theme',isDark?'light':'dark');
-  localStorage.setItem('af_dark_mode',isDark?'0':'1');
-  document.getElementById('dmToggle').textContent=isDark?'🌙':'☀️';
+/* ── FRIENDLY ERROR MAPPING ──────────────────────────── */
+function friendlyErrorMessage(e, context){
+  const raw=(e&&(e.message||e.error_description||String(e)))||'';
+  console.error(`[AcademeForge${context?' · '+context:''}] Technical error:`,e);
+  if(/failed to fetch|networkerror|network request failed|load failed/i.test(raw))
+    return 'We couldn\u2019t reach our servers. Please check your internet connection and try again.';
+  if(/timeout|timed out/i.test(raw))
+    return 'That took too long to respond. Please try again in a moment.';
+  if(/supabase client library failed to load/i.test(raw))
+    return 'This page didn\u2019t load correctly. Please refresh and try again.';
+  if(/functionshttperror|non-2xx|edge function/i.test(raw))
+    return 'Our server had trouble processing that. Please try again in a moment.';
+  if(/functionsrelayerror|functionsfetcherror/i.test(raw))
+    return 'We couldn\u2019t connect to our servers. Please try again in a moment.';
+  return 'Something went wrong on our end. Please try again in a moment.';
 }
-// set initial icon
-document.getElementById('dmToggle').textContent=
-  document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
 
-/* ── STEP TRACKER ───────────────────────────────────── */
+/* ── SUPABASE ─────────────────────────────────────────── */
+const STUDENT_URL="https://afooyyydhlwngzssgqih.supabase.co";
+const STUDENT_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb295eXlkaGx3bmd6c3NncWloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NDQxMjgsImV4cCI6MjA5NDIyMDEyOH0.KG0XO0oP_2MpewHoIwTtbrKg5FkyOYRUtVzLH1MSJiE";
+const cleanPhone=v=>String(v||'').trim().replace(/\D/g,'');
+let _sb=null;
+function getSb(){
+  if(_sb) return _sb;
+  if(typeof window.supabase==='undefined'||!window.supabase.createClient)
+    throw new Error('Supabase client library failed to load.');
+  _sb=window.supabase.createClient(STUDENT_URL,STUDENT_KEY);
+  return _sb;
+}
+async function edgeCall(fn,payload){
+  try{
+    if(!navigator.onLine) return{ok:false,message:'You\u2019re offline. Please check your internet connection and try again.'};
+    const sb=getSb();
+    const{data,error}=await sb.functions.invoke(fn,{body:payload||{}});
+    if(error) return{ok:false,message:friendlyErrorMessage(error,fn)};
+    if(!data){ console.error(`[AcademeForge · ${fn}] Empty response.`); return{ok:false,message:'We didn\u2019t get a response from the server. Please try again.'}; }
+    return data;
+  }catch(e){ return{ok:false,message:friendlyErrorMessage(e,fn)}; }
+}
+
+/* ── RESEND COOLDOWN TIMER ───────────────────────────── */
+let _resendTimer=null;
+let _resendSecondsLeft=0;
+
+function startResendCooldown(){
+  const btn=document.getElementById('btnResend');
+  if(!btn) return;
+  clearResendCooldown();
+  _resendSecondsLeft=90;
+  btn.disabled=true;
+  btn.textContent='Resend Code ('+_resendSecondsLeft+'s)';
+  _resendTimer=setInterval(function(){
+    _resendSecondsLeft--;
+    if(_resendSecondsLeft<=0){ clearResendCooldown(); }
+    else { if(btn) btn.textContent='Resend Code ('+_resendSecondsLeft+'s)'; }
+  },1000);
+}
+
+function clearResendCooldown(){
+  if(_resendTimer){ clearInterval(_resendTimer); _resendTimer=null; }
+  _resendSecondsLeft=0;
+  const btn=document.getElementById('btnResend');
+  if(btn){ btn.disabled=false; btn.textContent='Resend Code'; }
+}
+
+/* ── STEP TRACKER ─────────────────────────────────────── */
 function setStep(n){
   for(let i=1;i<=3;i++){
     const c=document.getElementById('sc'+i);
-    if(i<n){c.className='step-circle done';c.textContent='✓';}
-    else if(i===n){c.className='step-circle active';c.textContent=i;}
-    else{c.className='step-circle';c.textContent=i;}
+    if(i<n){ c.className='step-circle done'; c.textContent='✓'; }
+    else if(i===n){ c.className='step-circle active'; c.textContent=i; }
+    else{ c.className='step-circle'; c.textContent=i; }
     if(i<3){
       const l=document.getElementById('sl'+i);
       if(l) l.className='step-line'+(i<n?' done':'');
     }
   }
-}
-
-/* ── MESSAGE HELPER ─────────────────────────────────── */
-const ICONS={ok:'✓',err:'✕',info:'ℹ'};
-function showMsg(type,text){
-  const b=document.getElementById('authMsg');
-  b.className='msg '+type;
-  document.getElementById('msgIco').textContent=ICONS[type]||'';
-  document.getElementById('msgTxt').textContent=text||'';
-}
-function clearMsg(){
-  const b=document.getElementById('authMsg');
-  b.className='msg';
-  document.getElementById('msgTxt').textContent='';
-}
-
-/* ── SUPABASE ───────────────────────────────────────── */
-const STUDENT_URL="https://afooyyydhlwngzssgqih.supabase.co";
-const STUDENT_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb295eXlkaGx3bmd6c3NncWloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NDQxMjgsImV4cCI6MjA5NDIyMDEyOH0.KG0XO0oP_2MpewHoIwTtbrKg5FkyOYRUtVzLH1MSJiE";
-const cleanPhone=v=>String(v||'').trim().replace(/\D/g,'');
-let _sb=null;
-function getSb(){if(_sb)return _sb;_sb=supabase.createClient(STUDENT_URL,STUDENT_KEY);return _sb;}
-async function edgeCall(fn,payload){
-  try{
-    if(!navigator.onLine)return{ok:false,message:'No internet connection.'};
-    const sb=getSb();
-    const{data,error}=await sb.functions.invoke(fn,{body:payload||{}});
-    if(error)return{ok:false,message:error.message||'Request failed.'};
-    return data||{ok:false,message:'Empty response.'};
-  }catch(e){return{ok:false,message:e.message||'Request failed.'};}
 }
 
 let _resetStudent=null;
@@ -818,46 +429,63 @@ async function findStudentForReset(){
   clearMsg();
   const value=(document.getElementById('forgotLogin').value||'').trim();
   const clean=cleanPhone(value);
-  if(!value){showMsg('err','Please enter your Account ID, phone, or email.');return;}
+  if(!value){ showMsg('err','Please enter your Account ID, phone, or email.'); return; }
   const btn=document.getElementById('btnFindAccount');
-  btn.disabled=true; btn.textContent='Finding account…';
-  showMsg('info','Looking up your AcademeForge Account…');
+  btn.disabled=true; btn.textContent='Finding account\u2026';
+  showMsg('info','Looking up your AcademeForge Account\u2026');
   const res=await edgeCall('student-find-reset-af',{value,clean_value:clean,email_value:value.toLowerCase()});
-  if(!res||!res.ok){showMsg('err',res?.message||'No account found with those details.');btn.disabled=false;btn.textContent='Send Verification Code';return;}
-  if(!res.student?.email){showMsg('err','Account found but no email on record. Contact support.');btn.disabled=false;btn.textContent='Send Verification Code';return;}
+  if(!res||!res.ok){ showMsg('err',res?.message||'No account found with those details.'); btn.disabled=false; btn.textContent='Send Verification Code'; return; }
+  if(!res.student?.email){ showMsg('err','Account found but no email on record. Contact support.'); btn.disabled=false; btn.textContent='Send Verification Code'; return; }
   _resetStudent=res.student; _forgotOtpVerified=false;
-  showMsg('info','Sending verification code to your registered email…');
+  showMsg('info','Sending verification code to your registered email\u2026');
   const otpRes=await edgeCall('student-send-otp-af',{email:_resetStudent.email,mobile:_resetStudent.mobile||'',purpose:'reset'});
-  if(!otpRes||!otpRes.ok){showMsg('err','Could not send code: '+(otpRes?.message||'Server error.'));btn.disabled=false;btn.textContent='Send Verification Code';return;}
+  if(!otpRes||!otpRes.ok){ showMsg('err',otpRes?.message||'Could not send verification code. Please try again.'); btn.disabled=false; btn.textContent='Send Verification Code'; return; }
   document.getElementById('s2Area').classList.remove('hidden');
   document.getElementById('forgotLogin').disabled=true;
   btn.classList.add('hidden');
   setStep(2);
   showMsg('ok','Verification code sent to your registered email address.');
+  startResendCooldown();
 }
 
-/* ── RESEND OTP ──────────────────────────────────────── */
-async function resendOtp(){
-  if(!_resetStudent){return;}
+/* ── BACK TO STEP 1 ──────────────────────────────────── */
+function backToStep1(){
   clearMsg();
-  showMsg('info','Resending verification code…');
+  clearResendCooldown();
+  _resetStudent=null;
+  _forgotOtpVerified=false;
+  document.getElementById('s2Area').classList.add('hidden');
+  document.getElementById('forgotOtp').value='';
+  const loginEl=document.getElementById('forgotLogin');
+  if(loginEl) loginEl.disabled=false;
+  const btn=document.getElementById('btnFindAccount');
+  if(btn){ btn.classList.remove('hidden'); btn.disabled=false; btn.textContent='Send Verification Code'; }
+  setStep(1);
+}
+
+/* ── RESEND OTP ───────────────────────────────────────── */
+async function resendOtp(){
+  if(!_resetStudent) return;
+  clearMsg();
+  showMsg('info','Resending verification code\u2026');
   const res=await edgeCall('student-send-otp-af',{email:_resetStudent.email,mobile:_resetStudent.mobile||'',purpose:'reset'});
-  if(res?.ok) showMsg('ok','A new verification code has been sent.');
-  else showMsg('err',res?.message||'Could not resend code.');
+  if(res?.ok){ showMsg('ok','A new verification code has been sent.'); startResendCooldown(); }
+  else showMsg('err',res?.message||'Could not resend the code. Please try again.');
 }
 
 /* ── STEP 2: VERIFY OTP ──────────────────────────────── */
 async function verifyForgotOtp(){
   clearMsg();
   const otp=(document.getElementById('forgotOtp').value||'').trim();
-  if(!_resetStudent){showMsg('err','Please find your account first.');return;}
-  if(!otp||otp.length<4){showMsg('err','Enter the 6-digit code from your email.');return;}
+  if(!_resetStudent){ showMsg('err','Please find your account first.'); return; }
+  if(!otp||otp.length<6){ showMsg('err','Enter the 6-digit code from your email.'); return; }
   const btn=document.getElementById('btnVerifyOtp');
-  btn.disabled=true; btn.textContent='Verifying…';
-  showMsg('info','Verifying your identity…');
+  btn.disabled=true; btn.textContent='Verifying\u2026';
+  showMsg('info','Verifying your identity\u2026');
   const res=await edgeCall('student-verify-otp-af',{email:_resetStudent.email,otp,purpose:'reset'});
-  if(!res||!res.ok){showMsg('err','Incorrect code: '+(res?.message||'Verification failed.'));btn.disabled=false;btn.textContent='Verify Code';return;}
+  if(!res||!res.ok){ showMsg('err',res?.message||'Incorrect code. Please try again.'); btn.disabled=false; btn.textContent='Verify Code'; return; }
   _forgotOtpVerified=true;
+  clearResendCooldown();
   document.getElementById('s2Area').classList.add('hidden');
   document.getElementById('s3Area').classList.remove('hidden');
   setStep(3);
@@ -868,19 +496,42 @@ async function verifyForgotOtp(){
 async function resetPassword(){
   clearMsg();
   const newPwd=(document.getElementById('newPassword').value||'').trim();
-  if(!_resetStudent){showMsg('err','Session expired. Please start again.');return;}
-  if(!_forgotOtpVerified){showMsg('err','Identity not yet verified.');return;}
-  if(!newPwd||newPwd.length<6){showMsg('err','Password must be at least 6 characters.');return;}
+  if(!_resetStudent){ showMsg('err','Session expired. Please start again.'); return; }
+  if(!_forgotOtpVerified){ showMsg('err','Identity not yet verified.'); return; }
+  if(!newPwd||newPwd.length<6){ showMsg('err','Password must be at least 6 characters.'); return; }
   const btn=document.getElementById('btnResetPassword');
-  btn.disabled=true; btn.textContent='Updating…';
-  showMsg('info','Updating your AcademeForge Account password…');
+  btn.disabled=true; btn.textContent='Updating\u2026';
+  showMsg('info','Updating your AcademeForge Account password\u2026');
   const res=await edgeCall('student-reset-password-af',{id:_resetStudent.id,email:_resetStudent.email,new_password:newPwd});
-  if(!res||!res.ok){showMsg('err',res?.message||'Password update failed. Please try again.');btn.disabled=false;btn.textContent='Update Account Password';return;}
+  if(!res||!res.ok){ showMsg('err',res?.message||'Password update failed. Please try again.'); btn.disabled=false; btn.textContent='Update Password'; return; }
   _resetStudent=null; _forgotOtpVerified=false;
-  document.getElementById('stepTrack').classList.add('hidden');
   document.getElementById('boxForgot').classList.add('hidden');
   document.getElementById('boxSuccess').classList.remove('hidden');
 }
+
+/* ── THEME ────────────────────────────────────────────── */
+function setThemeMode(e){var t=window.matchMedia("(prefers-color-scheme: dark)").matches;let a=e;"system"===e?(a=t?"dark":"light",localStorage.setItem("af_dark_mode","system")):localStorage.setItem("af_dark_mode","dark"===e?"1":"0"),document.documentElement.setAttribute("data-theme",a),document.querySelectorAll(".theme-btn").forEach(e=>e.classList.remove("active"));t=document.querySelector(`.theme-btn[data-theme="${e}"]`);t&&t.classList.add("active")}
+document.addEventListener("DOMContentLoaded",()=>{var e=localStorage.getItem("af_dark_mode");let t="system";"1"===e?t="dark":"0"===e&&(t="light");e=document.querySelector(`.theme-btn[data-theme="${t}"]`);e&&e.classList.add("active")});
+
+/* ── FOOTER ACCORDION (mobile) ───────────────────────── */
+(function(){
+  function initFooterAcc(){
+    var toggles=document.querySelectorAll('.footer-acc-toggle');
+    toggles.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var body=btn.nextElementSibling;
+        var isOpen=btn.getAttribute('aria-expanded')==='true';
+        toggles.forEach(function(other){
+          if(other!==btn){ other.setAttribute('aria-expanded','false'); var ob=other.nextElementSibling; if(ob) ob.classList.remove('is-open'); }
+        });
+        btn.setAttribute('aria-expanded',isOpen?'false':'true');
+        if(body) body.classList.toggle('is-open',!isOpen);
+      });
+    });
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',initFooterAcc); }
+  else { initFooterAcc(); }
+})();
 </script>
 </body>
 </html>
